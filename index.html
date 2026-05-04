@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mekina Industries — The Silent Audit</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --canvas: #FAF9F6;
+    --ink: #111111;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--canvas);
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* Paper grain */
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  }
+
+  /* Reduced spacing from 100vh to 80vh to bring sections closer */
+  section {
+    width: 100%; min-height: 80vh; padding: 5vh 0;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  /* Container for SVG and Anchors */
+  .scene-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    display: flex; justify-content: center; align-items: center;
+  }
+
+  section svg { width: min(680px, 88vw); height: auto; display: block; }
+
+  .dp {
+    fill: none; stroke: var(--ink); stroke-width: 3;
+    stroke-linecap: round; stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* THE MINIMALIST ANCHORS */
+  .anchor-block {
+    position: absolute;
+    bottom: -5%; left: 5%;
+    opacity: 0; transform: translateY(20px);
+  }
+  .anchor-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700; color: var(--ink);
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .anchor-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+    font-weight: 300; color: rgba(17,17,17,0.6);
+    margin-top: 5px; letter-spacing: 0.05em;
+  }
+
+  /* Micro-label styling */
+  .micro-note {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    fill: var(--ink);
+    opacity: 0; /* Hidden initially, controlled by GSAP */
+  }
+
+  /* Vertical scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    opacity: 0; animation: hintIn 1s ease 2.8s forwards;
+  }
+  .scroll-indicator span {
+    display: block; width: 1px; background: rgba(17,17,17,0.25);
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+  @keyframes hintIn { to { opacity: 1; } }
+  @keyframes scrollDrop { 0% { height: 0; opacity: 0; } 30% { opacity: 1; } 100% { height: 52px; opacity: 0; } }
+
+  /* ── CLIMAX / CTA ── */
+  #climax { min-height: 40vh; background: var(--canvas); }
+  .cta-btn {
+    font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink);
+    background: transparent; border: 1px solid var(--ink); border-radius: 999px;
+    padding: 18px 52px; cursor: pointer; position: relative; overflow: hidden;
+    opacity: 0; transform: translateY(18px);
+    transition: all 0.4s ease;
+  }
+  .cta-btn.appear { opacity: 1; transform: translateY(0); }
+  .cta-btn:hover { border-width: 2px; background: rgba(17,17,17,0.05); letter-spacing: 0.4em; }
+</style>
+</head>
+<body>
+
+<section id="s1">
+  <div class="scene-container">
+    <div class="anchor-block" id="anchor1">
+      <div class="anchor-title">I. The Delusion</div>
+      <div class="anchor-sub">Selling the machine, instead of the outcome.</div>
+    </div>
+
+    <svg id="svg1" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+      <text x="210" y="100" class="micro-note mn1-early" transform="rotate(-5, 210, 100)">"Features"</text>
+      <text x="130" y="45" class="micro-note mn1-early" transform="rotate(5, 130, 45)">"Noise"</text>
+      <text x="50" y="300" class="micro-note mn1-early" transform="rotate(-15, 50, 300)">"Commoditized"</text>
+      <text x="430" y="240" class="micro-note mn1-late" transform="rotate(8, 430, 240)">"Specs & Data"</text>
+      <text x="200" y="380" class="micro-note mn1-late" transform="rotate(-3, 200, 380)">"Complex jargon"</text>
+      <text x="500" y="390" class="micro-note mn1-late" transform="rotate(-12, 500, 390)">"Blind spots"</text>
+      <text x="360" y="480" class="micro-note mn1-late" transform="rotate(2, 360, 480)">"Feature bloat"</text>
+
+      <path class="dp" id="p-case" d="M140,80 L540,80 L540,400 L140,400 Z"/>
+      <path class="dp" id="p-div1" d="M140,200 L540,200"/>
+      <path class="dp" id="p-div2" d="M360,80 L360,400"/>
+      <path class="dp" id="p-gear1-outer" d="M250,145 L258,128 L266,133 L274,118 L266,113 L274,97 L282,102 L282,89  L298,89  L298,102 L306,97  L314,113 L306,118 L314,133 L322,128 L330,145 L318,152 L322,162 L314,168 L322,178 L314,183 L306,169 L298,174 L298,187 L282,187 L282,174 L274,169 L266,183 L258,178 L266,168 L258,162 L262,152 Z"/>
+      <path class="dp" id="p-gear1-inner" d="M268,148 A22,22 0 1,0 268.001,148 Z"/>
+      <path class="dp" id="p-gear1-hub"  d="M290,148 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0"/>
+      <path class="dp" id="p-shaft" d="M316,148 L400,148"/>
+      <path class="dp" id="p-gear2-outer" d="M400,140 L406,128 L412,132 L418,121 L412,117 L418,106 L424,110 L424,100 L436,100 L436,110 L442,106 L448,117 L442,121 L448,132 L454,128 L460,140 L452,146 L454,154 L448,158 L454,166 L448,170 L442,159 L436,163 L436,173 L424,173 L424,163 L418,170 L448,170 L412,158 L406,166 L400,156 L408,150 Z"/>
+      <path class="dp" id="p-gear2-inner" d="M430,140 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0"/>
+      <path class="dp" id="p-pipe1" d="M170,80 L170,50 L260,50 L260,30 L380,30 L380,50 L490,50 L490,80"/>
+      <path class="dp" id="p-pipe2" d="M210,80 L210,65 L460,65 L460,80"/>
+      <path class="dp" id="p-pipe-valve1" d="M290,50 L290,34 M310,50 L310,34"/>
+      <path class="dp" id="p-pipe-valve2" d="M340,50 m-8,-8 l16,16 m0,-16 l-16,16"/>
+      <path class="dp" id="p-ant1" d="M200,80 L190,20 L185,14 M190,20 L200,8"/>
+      <path class="dp" id="p-ant2" d="M460,80 L470,18 M468,15 m-4,0 l8,0 m-4,-6 l0,6"/>
+      <path class="dp" id="p-ant3" d="M340,80 L335,10 L328,4 M335,10 L342,4"/>
+      <path class="dp" id="p-gauge1" d="M180,300 m-30,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0"/>
+      <path class="dp" id="p-gauge1-needle" d="M180,300 L196,282"/>
+      <path class="dp" id="p-gauge1-ticks" d="M180,272 L180,278 M150,300 L156,300 M210,300 L204,300 M158,278 L162,282 M202,278 L198,282"/>
+      <path class="dp" id="p-jbox" d="M390,230 L530,230 L530,380 L390,380 Z"/>
+      <path class="dp" id="p-jbox-inner" d="M400,245 L520,245 L520,365 L400,365 Z"/>
+      <path class="dp" id="p-jbox-screen" d="M408,255 L512,255 L512,335 L408,335 Z"/>
+      <path class="dp" id="p-scan" d="M412,265 L508,265 M412,275 L508,275 M412,285 L508,285 M412,295 L508,295 M412,305 L508,305 M412,315 L508,315 M412,325 L508,325"/>
+      <path class="dp" id="p-wire1" d="M170,230 C160,260 200,280 180,310 C160,340 200,360 170,400"/>
+      <path class="dp" id="p-wire2" d="M220,230 C240,250 210,270 230,300 C250,330 215,360 240,400"/>
+      <path class="dp" id="p-wire3" d="M310,230 C290,265 330,280 300,320 C270,360 320,370 310,400"/>
+      <path class="dp" id="p-exhaust" d="M360,400 L360,440 L250,440 L250,460 L430,460 L430,440 L540,440 L540,400"/>
+      <path class="dp" id="p-exh-valve" d="M340,440 L340,460 M380,440 L380,460"/>
+      <path class="dp" id="p-hatch" d="M140,360 L160,380 M140,340 L180,380 M140,320 L200,380 M140,300 L220,380 M150,280 L240,380"/>
+    </svg>
+  </div>
+  <div class="scroll-indicator"><span></span></div>
+</section>
+
+<section id="s2">
+  <div class="scene-container">
+    <div class="anchor-block" id="anchor2">
+      <div class="anchor-title">II. The Reality</div>
+      <div class="anchor-sub">Your buyers are purchasing risk reduction.</div>
+    </div>
+
+    <svg id="svg2" viewBox="0 0 680 540" xmlns="http://www.w3.org/2000/svg">
+      <text x="430" y="400" class="micro-note mn2-early" transform="rotate(-6, 430, 400)">"Their real pain"</text>
+      <text x="180" y="100" class="micro-note mn2-early" transform="rotate(-15, 180, 100)">"Risk"</text>
+      <text x="120" y="210" class="micro-note mn2-early" transform="rotate(8, 120, 210)">"Overwhelm"</text>
+      <text x="440" y="70" class="micro-note mn2-late" transform="rotate(4, 440, 70)">"Time loss"</text>
+      <text x="460" y="240" class="micro-note mn2-late" transform="rotate(12, 460, 240)">"Margin erosion"</text>
+      <text x="160" y="450" class="micro-note mn2-late" transform="rotate(-5, 160, 450)">"Sleepless nights"</text>
+      
+      <path class="dp" id="c-ring" d="M340,60 m-100,0 a100,100 0 1,0 200,0 a100,100 0 1,0 -200,0"/>
+      <path class="dp" id="c-inner" d="M340,60 m-80,0 a80,80 0 1,0 160,0 a80,80 0 1,0 -160,0"/>
+      <path class="dp" id="c-crack" d="M295,20 L312,52 L298,68 L318,95 L308,128"/>
+      <path class="dp" id="c-hour"   d="M340,60 L305,28"/>
+      <path class="dp" id="c-minute" d="M340,60 L340,138"/>
+      <path class="dp" id="c-hub"    d="M340,60 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0"/>
+      <path class="dp" id="c-ticks" d="M340,-38 L340,-26 M340,146 L340,158 M242,60 L254,60 M426,60 L438,60 M274,-8 L281,-1 M399,121 L406,128 M274,128 L281,121 M399,-1 L406,-8 M306,-34 L309,-22 M368,142 L371,154 M374,-34 L371,-22 M306,142 L309,154"/>
+      <path class="dp" id="c-shard" d="M255,30 L248,18 L265,12 L270,26 Z"/>
+      <path class="dp" id="c-shard2" d="M415,105 L425,98 L432,115 L420,120 Z"/>
+      <path class="dp" id="c-chain" d="M340,-42 C338,-55 342,-68 340,-80 M334,-80 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 M334,-92 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0"/>
+      <path class="dp" id="w-body" d="M80,220 L600,220 L600,310 L80,310 Z"/>
+      <path class="dp" id="w-r1" d="M80,255 L600,255 M140,220 L140,255 M230,220 L230,255 M320,220 L320,255 M410,220 L410,255 M500,220 L500,255"/>
+      <path class="dp" id="w-r2" d="M80,255 L600,255 M185,255 L185,310 M275,255 L275,310 M365,255 L365,310 M455,255 L455,310 M545,255 L545,310"/>
+      <path class="dp" id="w-jagged" d="M80,220 L96,206 L112,216 L128,200 L148,212 L164,202 L180,214 L200,198 L216,210 L238,200 L255,212 L270,198 L290,210 L308,200 L328,215 L344,200 L364,212 L382,200 L400,214 L420,200 L438,212 L456,200 L475,215 L492,200 L512,212 L528,200 L545,212 L562,198 L580,210 L600,200"/>
+      <path class="dp" id="f-head" d="M340,360 m-32,0 a32,32 0 1,0 64,0 a32,32 0 1,0 -64,0"/>
+      <path class="dp" id="f-neck" d="M340,392 L340,410"/>
+      <path class="dp" id="f-torso" d="M340,410 L340,480"/>
+      <path class="dp" id="f-larm" d="M340,430 C318,415 305,395 308,370 C310,355 320,348 332,350"/>
+      <path class="dp" id="f-rarm" d="M340,430 C362,415 375,395 372,370 C370,355 360,348 348,350"/>
+      <path class="dp" id="f-lleg" d="M340,480 C325,495 318,510 315,530"/>
+      <path class="dp" id="f-rleg" d="M340,480 C355,495 362,510 365,530"/>
+      <path class="dp" id="f-leye" d="M322,354 C325,350 329,350 332,354"/>
+      <path class="dp" id="f-reye" d="M348,354 C351,350 355,350 358,354"/>
+      <path class="dp" id="f-mouth" d="M326,374 C333,368 347,368 354,374"/>
+      <path class="dp" id="f-sweat" d="M295,348 C293,344 290,340 293,336 C296,332 300,336 298,342 M375,345 C377,341 380,337 377,333 C374,329 370,333 372,339"/>
+      <path class="dp" id="f-stress" d="M308,328 L298,312 M340,328 L340,310 M372,328 L382,312 M295,345 L278,338 M385,345 L402,338"/>
+      <path class="dp" id="gravity" d="M340,162 L340,195 M332,188 L340,198 L348,188 M200,312 L200,345 M192,338 L200,348 L208,338 M480,312 L480,345 M472,338 L480,348 L488,338"/>
+    </svg>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="scene-container">
+    <div class="anchor-block" id="anchor3">
+      <div class="anchor-title">III. The Architecture</div>
+      <div class="anchor-sub">Translating complexity into frictionless outcomes.</div>
+    </div>
+
+    <svg id="svg3" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+      <text x="20" y="200" class="micro-note mn3-early" transform="rotate(-15, 20, 200)">"Confusion"</text>
+      <text x="260" y="80" class="micro-note mn3-early" transform="rotate(-2, 260, 80)">"We isolate the signal"</text>
+      <text x="180" y="440" class="micro-note mn3-early" transform="rotate(5, 180, 440)">"Mekina Industries"</text>
+      <text x="310" y="120" class="micro-note mn3-late" transform="rotate(2, 310, 120)">"The Strategy Lens"</text>
+      <text x="560" y="240" class="micro-note mn3-late" transform="rotate(-5, 560, 240)">"Clear Path"</text>
+      <text x="440" y="190" class="micro-note mn3-late" transform="rotate(12, 440, 190)">"Clarity"</text>
+      <text x="500" y="340" class="micro-note mn3-late" transform="rotate(-2, 500, 340)">"Frictionless"</text>
+
+      <path class="dp" id="t-chaos" d="M20,260 C40,220 60,300 80,240 C100,180 90,320 120,270 C150,220 130,300 160,250 C175,225 168,280 190,255 C205,240 200,268 220,260"/>
+      <path class="dp" id="t-prism" d="M240,140 L460,260 L240,380 Z"/>
+      <path class="dp" id="t-ref1"  d="M240,200 L430,268"/>
+      <path class="dp" id="t-ref2"  d="M240,260 L415,265"/>
+      <path class="dp" id="t-ref3"  d="M240,320 L430,262"/>
+      <path class="dp" id="t-shine" d="M268,152 L262,146 L278,142 L270,158"/>
+      <path class="dp" id="t-scratch" d="M243,148 L248,160 M246,340 L250,350"/>
+      <path class="dp" id="t-bridge-span" d="M480,300 Q560,200 640,300"/>
+      <path class="dp" id="t-bridge-deck" d="M472,305 L648,305"/>
+      <path class="dp" id="t-ramp-l"  d="M440,305 L472,305"/>
+      <path class="dp" id="t-ramp-r"  d="M648,305 L680,305"/>
+      <path class="dp" id="t-cables" d="M500,305 L496,290 M520,305 L514,278 M540,305 L535,268 M560,305 L558,268 M580,305 L581,278 M600,305 L604,290 M620,305 L622,300"/>
+      <path class="dp" id="t-ground" d="M440,312 L680,312 M440,320 L680,320"/>
+      <path class="dp" id="t-gnd-hatch" d="M445,320 L440,330 M460,320 L455,330 M475,320 L470,330 M490,320 L485,330 M505,320 L500,330 M520,320 L515,330 M535,320 L530,330 M550,320 L545,330 M565,320 L560,330 M580,320 L575,330 M595,320 L590,330 M610,320 L605,330 M625,320 L620,330 M640,320 L635,330 M655,320 L650,330 M670,320 L665,330"/>
+      <path class="dp" id="t-connect" d="M460,260 C465,260 470,262 480,295"/>
+      <path class="dp" id="t-fig-head" d="M558,272 m-10,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0"/>
+      <path class="dp" id="t-fig-body" d="M558,282 L558,300"/>
+      <path class="dp" id="t-fig-larm" d="M558,288 L548,296"/>
+      <path class="dp" id="t-fig-rarm" d="M558,288 L568,293"/>
+      <path class="dp" id="t-fig-lleg" d="M558,300 L550,312"/>
+      <path class="dp" id="t-fig-rleg" d="M558,300 L565,312"/>
+      <path class="dp" id="t-ray1" d="M462,240 L490,210"/>
+      <path class="dp" id="t-ray2" d="M462,255 L500,245"/>
+      <path class="dp" id="t-ray3" d="M462,270 L502,270"/>
+      <path class="dp" id="t-ray4" d="M462,280 L500,295"/>
+      <path class="dp" id="t-ray5" d="M462,296 L488,316"/>
+      <path class="dp" id="t-door" d="M630,305 C630,275 650,260 660,260 C670,260 680,270 680,305"/>
+      <path class="dp" id="t-annot1" d="M80,220 L120,200 M120,200 L180,200"/>
+      <path class="dp" id="t-annot2" d="M200,205 L216,205"/>
+    </svg>
+  </div>
+</section>
+
+<section id="climax">
+  <button class="cta-btn" id="audit-btn">ENTER THE AUDIT</button>
+</section>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── utility: prep all paths in an SVG ── */
+function prepPaths(svgId) {
+  const paths = document.querySelectorAll(`#${svgId} .dp`);
+  paths.forEach(p => {
+    const len = p.getTotalLength ? p.getTotalLength() : 600;
+    p.style.strokeDasharray  = len;
+    p.style.strokeDashoffset = len;
+  });
+  return paths;
+}
+
+/* ── Scene 1 ── */
+function buildScene1() {
+  const paths = prepPaths('svg1');
+  const order = [
+    ['p-case'], ['p-div1','p-div2'], ['p-gear1-outer','p-gear1-inner','p-gear1-hub'],
+    ['p-shaft'], ['p-gear2-outer','p-gear2-inner'], ['p-pipe1','p-pipe2'],
+    ['p-pipe-valve1','p-pipe-valve2'], ['p-ant1','p-ant2','p-ant3'],
+    ['p-gauge1','p-gauge1-needle','p-gauge1-ticks'], ['p-jbox','p-jbox-inner','p-jbox-screen'],
+    ['p-scan'], ['p-wire1','p-wire2','p-wire3'], ['p-exhaust','p-exh-valve'], ['p-hatch']
+  ];
+
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: '#s1', start: 'top 80%', end: 'bottom 30%', scrub: 1.2 }
+  });
+
+  // Early labels fade in early in the timeline (at 0.5s mark)
+  tl.to('.mn1-early', { opacity: 0.6, duration: 0.8 }, 0.5);
+
+  order.forEach(group => {
+    group.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      tl.to(el, { strokeDashoffset: 0, ease: 'none', duration: 0.6 }, '<0.15');
+    });
+    tl.to({}, { duration: 0.2 }); 
+  });
+  
+  // Late labels and Anchor fade in at the end
+  tl.to('.mn1-late', { opacity: 0.6, duration: 0.8 }, "-=0.5");
+  tl.to('#anchor1', { opacity: 1, y: 0, duration: 1 }, "-=0.8");
+}
+
+/* ── Scene 2 ── */
+function buildScene2() {
+  prepPaths('svg2');
+  const order = [
+    ['c-ring','c-inner'], ['c-crack'], ['c-hour','c-minute','c-hub'], ['c-ticks'],
+    ['c-shard','c-shard2'], ['c-chain'], ['w-body'], ['w-r1','w-r2'], ['w-jagged'],
+    ['f-head'], ['f-neck','f-torso'], ['f-larm','f-rarm'], ['f-lleg','f-rleg'],
+    ['f-leye','f-reye','f-mouth'], ['f-sweat','f-stress'], ['gravity']
+  ];
+
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: '#s2', start: 'top 80%', end: 'bottom 30%', scrub: 1.2 }
+  });
+
+  // "Their real pain" and other early tags fade in right at the start of drawing
+  tl.to('.mn2-early', { opacity: 0.8, duration: 0.8 }, 0.4);
+
+  order.forEach(group => {
+    group.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      tl.to(el, { strokeDashoffset: 0, ease: 'none', duration: 0.55 }, '<0.12');
+    });
+    tl.to({}, { duration: 0.18 });
+  });
+
+  // Late labels and Anchor fade in at the end
+  tl.to('.mn2-late', { opacity: 0.6, duration: 0.8 }, "-=0.5");
+  tl.to('#anchor2', { opacity: 1, y: 0, duration: 1 }, "-=0.8");
+}
+
+/* ── Scene 3 ── */
+function buildScene3() {
+  prepPaths('svg3');
+  const order = [
+    ['t-chaos'], ['t-prism'], ['t-ref1','t-ref2','t-ref3'], ['t-shine','t-scratch'],
+    ['t-connect'], ['t-ray1','t-ray2','t-ray3','t-ray4','t-ray5'], ['t-bridge-span'],
+    ['t-bridge-deck'], ['t-ramp-l','t-ramp-r'], ['t-cables'], ['t-ground','t-gnd-hatch'],
+    ['t-fig-head','t-fig-body','t-fig-larm','t-fig-rarm','t-fig-lleg','t-fig-rleg'],
+    ['t-door'], ['t-annot1','t-annot2']
+  ];
+
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: '#s3', start: 'top 80%', end: 'bottom 20%', scrub: 1.2 }
+  });
+
+  // Our Role (Vanguard Architecture / Isolate the signal) appears early
+  tl.to('.mn3-early', { opacity: 0.8, duration: 0.8 }, 0.4);
+
+  order.forEach(group => {
+    group.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      tl.to(el, { strokeDashoffset: 0, ease: 'none', duration: 0.6 }, '<0.12');
+    });
+    tl.to({}, { duration: 0.2 });
+  });
+
+  // Late labels and Anchor
+  tl.to('.mn3-late', { opacity: 0.6, duration: 0.8 }, "-=0.5");
+  tl.to('#anchor3', { opacity: 1, y: 0, duration: 1 }, "-=0.8");
+
+  // CTA appears after scene 3 completes
+  ScrollTrigger.create({
+    trigger: '#climax',
+    start: 'top 85%',
+    onEnter: () => {
+      gsap.to('#audit-btn', {
+        opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+        onStart: () => document.getElementById('audit-btn').classList.add('appear')
+      });
+    }
+  });
+}
+
+// Init on DOM ready
+window.addEventListener('load', () => {
+  buildScene1();
+  buildScene2();
+  buildScene3();
+});
+</script>
+</body>
+</html>
